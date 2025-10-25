@@ -1,36 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Category } from '../models/category.model';
-
+import { Firestore, collection, collectionData, addDoc, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private categories: Category[] = [
-    { id: 1, name: 'Personal' },
-    { id: 2, name: 'Trabajo' },
-  ];
+private firestore = inject(Firestore);
 
-  getCategories(): Category[] {
-    return [...this.categories];
+  constructor() { }
+
+  getCategories(): Observable<Category[]> {
+
+    const categoriesRef = collection(this.firestore, 'categories');
+    return collectionData(categoriesRef, { idField: 'id' }) as Observable<Category[]>;
   }
 
-  addCategory(name: string): Category {
-    const newCategory: Category = {
-      id: this.categories.length + 1,
-      name,
-    };
-    this.categories.push(newCategory);
-    return newCategory;
+  async addCategory(category: Partial<Category>) {
+    const categoriesRef = collection(this.firestore, 'categories');
+    await addDoc(categoriesRef, category);
   }
 
-  updateCategory(updated: Category) {
-    const index = this.categories.findIndex(c => c.id === updated.id);
-    if (index !== -1) {
-      this.categories[index] = updated;
-    }
+  async updateCategory(category: Category) {
+    const { id, ...categoryData } = category;
+    const categoryDoc = doc(this.firestore, `categories/${id}`);
+    await updateDoc(categoryDoc, categoryData);
+  }
+  async deleteCategory(categoryId: string) {
+    const categoryDoc = doc(this.firestore, `categories/${categoryId}`);
+    await deleteDoc(categoryDoc);
   }
 
-  deleteCategory(categoryId: number) {
-    this.categories = this.categories.filter(c => c.id !== categoryId);
-  }
 }

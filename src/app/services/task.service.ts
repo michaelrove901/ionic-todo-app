@@ -1,38 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Task } from '../models/task.model';
+import { Firestore, collection, collectionData, addDoc, doc, updateDoc, deleteDoc, query } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  private tasks: Task[] = [
-    { id: 1, title: 'Comprar leche', completed: false, categoryId: 1 },
-    { id: 2, title: 'Estudiar Ionic', completed: true, categoryId: 2 },
-  ];
+  private tasksCollection = collection(this.firestore, 'tasks');
 
-  getTasks(): Task[] {
-    return [...this.tasks];
+  constructor(private firestore: Firestore) { }
+
+  getTasks(): Observable<Task[]> {
+    return collectionData(this.tasksCollection, { idField: 'id' }) as Observable<Task[]>;
   }
 
-  addTask(title: string, categoryId?: number): Task {
-    const newTask: Task = {
-      id: this.tasks.length + 1,
-      title,
-      completed: false,
-      categoryId,
-    };
-    this.tasks.push(newTask);
-    return newTask;
+  async addTask(title: string, categoryId?: string): Promise<Task> {
+    const newTask: Omit<Task, 'id'> = { title, completed: false, categoryId };
+    const docRef = await addDoc(this.tasksCollection, newTask);
+    return { id: docRef.id, ...newTask };
   }
 
-  updateTask(updatedTask: Task) {
-    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
-    if (index !== -1) {
-      this.tasks[index] = updatedTask;
-    }
+
+  async updateTask(task: Task): Promise<void> {
+    const taskDoc = doc(this.firestore, `tasks/${task.id}`);
+    await updateDoc(taskDoc, { title: task.title, completed: task.completed, categoryId: task.categoryId });
   }
 
-  deleteTask(taskId: number) {
-    this.tasks = this.tasks.filter(t => t.id !== taskId);
+  async deleteTask(taskId: string): Promise<void> {
+    const taskDoc = doc(this.firestore, `tasks/${taskId}`);
+    await deleteDoc(taskDoc);
   }
 }

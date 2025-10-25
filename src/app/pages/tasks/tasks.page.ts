@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -14,10 +14,11 @@ import { Category } from '../../models/category.model';
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, TaskModalComponent],
 })
-export class TasksPage {
+export class TasksPage implements OnInit {
   tasks: Task[] = [];
+  filteredTasks: Task[] = [];
   categories: Category[] = [];
-  selectedCategoryId?: number;
+  selectedCategoryId?: string;
 
   constructor(
     private taskService: TaskService,
@@ -32,23 +33,31 @@ export class TasksPage {
   }
 
   loadCategories() {
-    this.categories = this.categoryService.getCategories();
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   loadTasks() {
-    const allTasks = this.taskService.getTasks();
-    this.tasks = this.selectedCategoryId
-      ? allTasks.filter(t => t.categoryId === this.selectedCategoryId)
-      : allTasks;
+    this.taskService.getTasks().subscribe(allTasks => {
+      this.tasks = allTasks;
+      this.applyFilter();
+    });
   }
 
-  filterByCategory(categoryId?: number) {
+  applyFilter() {
+    this.filteredTasks = this.selectedCategoryId
+      ? this.tasks.filter(t => t.categoryId === this.selectedCategoryId)
+      : this.tasks;
+  }
+
+  filterByCategory(categoryId?: string) {
     this.selectedCategoryId = categoryId;
-    this.loadTasks();
+    this.applyFilter();
   }
 
   getCategoryName(task: Task): string {
-    return this.categories.find(c => c.id === task.categoryId)?.name || '';
+    return this.categories.find(c => c.id === task.categoryId)?.name || 'Sin categoría';
   }
 
   async openAddModal() {
@@ -57,10 +66,7 @@ export class TasksPage {
       componentProps: { categories: this.categories },
     });
 
-    modal.onDidDismiss().then(() => {
-      this.loadTasks();
-    });
-
+    modal.onDidDismiss().then(() => this.loadTasks());
     await modal.present();
   }
 
@@ -70,10 +76,7 @@ export class TasksPage {
       componentProps: { task, categories: this.categories },
     });
 
-    modal.onDidDismiss().then(() => {
-      this.loadTasks();
-    });
-
+    modal.onDidDismiss().then(() => this.loadTasks());
     await modal.present();
   }
 

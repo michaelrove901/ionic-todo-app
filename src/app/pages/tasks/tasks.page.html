@@ -1,18 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Tareas</ion-title>
+    <ion-title>Tasks</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openAddModal()">+Agregar tarea</ion-button>
+      <ion-button (click)="openAddModal()">Crear Tarea</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <ion-item>
     <ion-label>Filtrar por categoría</ion-label>
     <ion-select [(ngModel)]="selectedCategoryId" (ionChange)="filterByCategory(selectedCategoryId)">
-      <ion-select-option [value]="undefined">Todas</ion-select-option>
+      <ion-select-option value="">Todas</ion-select-option>
       <ion-select-option *ngFor="let category of categories" [value]="category.id">
         {{ category.name }}
       </ion-select-option>
@@ -20,10 +19,10 @@
   </ion-item>
 
   <ion-list>
-    <ion-item *ngFor="let task of tasks">
+    <ion-item *ngFor="let task of filteredTasks">
       <ion-label>
-        {{ task.title }}
-        <span *ngIf="task.categoryId"> - {{ getCategoryName(task) }}</span>
+        <h2>{{ task.title }}</h2>
+        <p>{{ getCategoryName(task) }}</p>
       </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="openEditModal(task)">Editar</ion-button>
@@ -31,6 +30,5 @@
       </ion-buttons>
     </ion-item>
   </ion-list>
-
 
 </ion-content>

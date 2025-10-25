@@ -19,7 +19,7 @@ export class TaskModalComponent implements OnInit {
   taskTitle: string = '';
   @Output() taskCreated = new EventEmitter<Task>();
   @Output() taskUpdated = new EventEmitter<Task>();
-  selectedCategoryId?: number;
+  selectedCategoryId?: string;
   constructor(private modalCtrl: ModalController, private taskService: TaskService) { }
 
   ngOnInit() {
@@ -29,22 +29,22 @@ export class TaskModalComponent implements OnInit {
     }
   }
 
-  addTask() {
+  async addTask() {
     if (!this.taskTitle.trim()) return;
 
-    const newTask = this.taskService.addTask(this.taskTitle, this.selectedCategoryId);
+    const newTask = await this.taskService.addTask(this.taskTitle, this.selectedCategoryId);
     this.taskCreated.emit(newTask);
     this.modalCtrl.dismiss();
   }
 
-  saveTask() {
+  async saveTask() {
     if (!this.taskTitle.trim()) return;
 
     if (this.task) {
-      this.taskService.updateTask({ ...this.task, title: this.taskTitle, categoryId: this.selectedCategoryId });
+      await this.taskService.updateTask({ ...this.task, title: this.taskTitle, categoryId: this.selectedCategoryId });
       this.taskUpdated.emit({ ...this.task, title: this.taskTitle, categoryId: this.selectedCategoryId });
     } else {
-      const newTask = this.taskService.addTask(this.taskTitle, this.selectedCategoryId);
+      const newTask = await this.taskService.addTask(this.taskTitle, this.selectedCategoryId);
       this.taskUpdated.emit(newTask);
     }
 
