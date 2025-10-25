@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { Component, OnInit, signal } from '@angular/core';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
+import { FeatureFlagService } from '../services/feature-flag.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  standalone: true,
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, NgIf],
 })
-export class HomePage {
-  constructor() {}
+export class HomePage implements OnInit {
+
+  featureEnabled = signal(false);
+
+  constructor(private featureFlagService: FeatureFlagService) {}
+
+  async ngOnInit() {
+    await this.featureFlagService.initialize();
+
+    const isEnabled: boolean = await this.featureFlagService.isFeatureEnabled('enableNewFeature');
+
+    this.featureEnabled.set(isEnabled);
+  }
 }

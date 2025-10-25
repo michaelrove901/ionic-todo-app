@@ -68,3 +68,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Android
+android/.gradle/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/.idea/
+*.iml
+
+# iOS (si aplica)
+ios/App/build/
+ios/build/

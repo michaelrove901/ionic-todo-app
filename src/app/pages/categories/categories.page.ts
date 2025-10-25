@@ -14,8 +14,8 @@ import { Observable } from 'rxjs';
   templateUrl: './categories.page.html',
 })
 export class CategoriesPage implements OnInit {
-  categories: Category[] = [];      // Array local para validaciones
-  categories$!: Observable<Category[]>; // Observable para la vista
+  categories: Category[] = [];
+  categories$!: Observable<Category[]>;
 
   constructor(
     private categoryService: CategoryService,
@@ -23,13 +23,10 @@ export class CategoriesPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Obtenemos el Observable para la vista
     this.categories$ = this.categoryService.getCategories();
 
-    // Suscribimos para mantener el array local actualizado
     this.categories$.subscribe(categories => {
       this.categories = categories;
-      console.log('Categories loaded:', this.categories);
     });
   }
 
@@ -45,7 +42,6 @@ export class CategoriesPage implements OnInit {
             const name = data.name?.trim();
             if (!name) return;
 
-            // Validar si ya existe la categoría
             const exists = this.categories.some(
               c => c.name.toLowerCase() === name.toLowerCase()
             );
@@ -59,7 +55,6 @@ export class CategoriesPage implements OnInit {
               return;
             }
 
-            // Si no existe, agregar
             await this.categoryService.addCategory({ name });
           },
         },
@@ -80,7 +75,6 @@ export class CategoriesPage implements OnInit {
             const name = data.name?.trim();
             if (!name) return;
 
-            // Validar que no exista otra categoría con el mismo nombre
             const exists = this.categories.some(
               c => c.name.toLowerCase() === name.toLowerCase() && c.id !== category.id
             );
