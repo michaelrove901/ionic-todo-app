@@ -2,20 +2,35 @@
   <ion-toolbar>
     <ion-title>Tareas</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openAddModal()">Agregar</ion-button>
+      <ion-button (click)="openAddModal()">+Agregar tarea</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label>Filtrar por categoría</ion-label>
+    <ion-select [(ngModel)]="selectedCategoryId" (ionChange)="filterByCategory(selectedCategoryId)">
+      <ion-select-option [value]="undefined">Todas</ion-select-option>
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">
+        {{ category.name }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
   <ion-list>
     <ion-item *ngFor="let task of tasks">
-      <ion-label>{{ task.title }}</ion-label>
-      <ion-note slot="end">{{ task.completed ? '✔️' : '❌' }}</ion-note>
+      <ion-label>
+        {{ task.title }}
+        <span *ngIf="task.categoryId"> - {{ getCategoryName(task) }}</span>
+      </ion-label>
       <ion-buttons slot="end">
-        <ion-button size="small" (click)="openEditModal(task)">Editar</ion-button>
-        <ion-button size="small" color="danger" (click)="confirmDelete(task)">Eliminar</ion-button>
+        <ion-button (click)="openEditModal(task)">Editar</ion-button>
+        <ion-button color="danger" (click)="confirmDelete(task)">Eliminar</ion-button>
       </ion-buttons>
     </ion-item>
   </ion-list>
+
+
 </ion-content>

@@ -10,15 +10,16 @@ export class TaskService {
     { id: 2, title: 'Estudiar Ionic', completed: true, categoryId: 2 },
   ];
 
-  getTasks() {
+  getTasks(): Task[] {
     return [...this.tasks];
   }
 
-  addTask(title: string): Task {
+  addTask(title: string, categoryId?: number): Task {
     const newTask: Task = {
       id: this.tasks.length + 1,
       title,
       completed: false,
+      categoryId,
     };
     this.tasks.push(newTask);
     return newTask;
