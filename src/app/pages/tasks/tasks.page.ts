@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { TaskService, Task } from '../../services/task.service';
+import { TaskService,  } from '../../services/task.service';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { AlertController } from '@ionic/angular';
-
+import { Task } from '../../models/task.model';
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.page.html',

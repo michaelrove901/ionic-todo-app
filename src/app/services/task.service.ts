@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  categoryId?: number;
-}
+import { Task } from '../models/task.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +18,7 @@ export class TaskService {
     const newTask: Task = {
       id: this.tasks.length + 1,
       title,
-      completed: false
+      completed: false,
     };
     this.tasks.push(newTask);
     return newTask;
@@ -36,10 +30,8 @@ export class TaskService {
       this.tasks[index] = updatedTask;
     }
   }
-  
+
   deleteTask(taskId: number) {
     this.tasks = this.tasks.filter(t => t.id !== taskId);
   }
-
-
 }

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController, IonInput } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { TaskService, Task } from '../../services/task.service';
-
+import { TaskService } from '../../services/task.service';
+import { Task } from '../../models/task.model';
 @Component({
   selector: 'app-task-modal',
   standalone: true,
