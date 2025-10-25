@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Tasks</ion-title>
+    <ion-title>Tareas</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openAddModal()">Crear Tarea</ion-button>
     </ion-buttons>
@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Filtrado por categoría -->
   <ion-item>
     <ion-label>Filtrar por categoría</ion-label>
     <ion-select [(ngModel)]="selectedCategoryId" (ionChange)="filterByCategory(selectedCategoryId)">
@@ -18,11 +19,13 @@
     </ion-select>
   </ion-item>
 
+  <!-- Lista de tareas -->
   <ion-list>
     <ion-item *ngFor="let task of filteredTasks">
-      <ion-label>
+      <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="toggleCompleted(task)"></ion-checkbox>
+      <ion-label [class.completed]="task.completed">
         <h2>{{ task.title }}</h2>
-        <p>{{ getCategoryName(task) }}</p>
+        <p *ngIf="task.categoryId">{{ getCategoryName(task) }}</p>
       </ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="openEditModal(task)">Editar</ion-button>
@@ -30,5 +33,11 @@
       </ion-buttons>
     </ion-item>
   </ion-list>
-
 </ion-content>
+
+<style>
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+</style>

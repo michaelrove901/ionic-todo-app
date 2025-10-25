@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { Category } from '../../models/category.model';
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, TaskModalComponent],
 })
-export class TasksPage implements OnInit {
+export class TasksPage {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   categories: Category[] = [];
@@ -25,7 +25,7 @@ export class TasksPage implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private categoryService: CategoryService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadCategories();
@@ -45,19 +45,19 @@ export class TasksPage implements OnInit {
     });
   }
 
-  applyFilter() {
-    this.filteredTasks = this.selectedCategoryId
-      ? this.tasks.filter(t => t.categoryId === this.selectedCategoryId)
-      : this.tasks;
-  }
-
   filterByCategory(categoryId?: string) {
     this.selectedCategoryId = categoryId;
     this.applyFilter();
   }
 
+  private applyFilter() {
+    this.filteredTasks = this.selectedCategoryId
+      ? this.tasks.filter(t => t.categoryId === this.selectedCategoryId)
+      : [...this.tasks];
+  }
+
   getCategoryName(task: Task): string {
-    return this.categories.find(c => c.id === task.categoryId)?.name || 'Sin categoría';
+    return this.categories.find(c => c.id === task.categoryId)?.name || '';
   }
 
   async openAddModal() {
@@ -98,5 +98,11 @@ export class TasksPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async toggleCompleted(task: Task) {
+    const updatedTask: Task = { ...task, completed: !task.completed };
+    await this.taskService.updateTask(updatedTask);
+    this.loadTasks();
   }
 }
