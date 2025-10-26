@@ -1,10 +1,8 @@
-import { RouterLink } from '@angular/router';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { NgIf } from '@angular/common';
 import {
   IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonButton,
   IonCard,
@@ -12,7 +10,6 @@ import {
   IonCardContent,
   IonCardTitle,
   IonText,
-  IonButtons,
   AlertController
 } from '@ionic/angular/standalone';
 
@@ -25,8 +22,6 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
   standalone: true,
   imports: [
     IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonButton,
     IonCard,
@@ -34,9 +29,7 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
     IonCardContent,
     IonCardTitle,
     IonText,
-    IonButtons,
     NgIf,
-    RouterLink,
     NavbarComponent
   ],
 })
