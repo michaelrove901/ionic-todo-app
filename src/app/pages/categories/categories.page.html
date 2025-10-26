@@ -1,20 +1,29 @@
 <ion-header>
+  <app-navbar></app-navbar>
+</ion-header>
+
+<ion-header>
   <ion-toolbar>
     <ion-title>Categorías</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="addCategory()">Crear Categoria</ion-button>
+      <ion-button color="primary" (click)="addCategory()">Crear Categoría</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-list>
-    <ion-item *ngFor="let category of categories$ | async">
-      <ion-label>{{ category.name }}</ion-label>
-      <ion-buttons slot="end">
-        <ion-button (click)="editCategory(category)">Editar</ion-button>
-        <ion-button color="danger" (click)="deleteCategory(category)">Eliminar</ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-list>
+  <div class="categories-grid">
+    <ion-card *ngFor="let category of categories" class="category-card">
+      <ion-card-header>
+        <ion-card-title>{{ category.name }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-buttons class="category-buttons">
+          <ion-button color="tertiary" fill="outline" (click)="editCategory(category)">Editar</ion-button>
+          <ion-button color="danger" fill="outline" (click)="deleteCategory(category)">Eliminar</ion-button>
+        </ion-buttons>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

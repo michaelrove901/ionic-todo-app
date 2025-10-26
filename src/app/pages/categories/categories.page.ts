@@ -1,31 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, WritableSignal, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IonicModule, ModalController, AlertController, ToastController } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
-import { AlertController } from '@ionic/angular';
-import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [CommonModule, IonicModule, FormsModule, NavbarComponent],
   templateUrl: './categories.page.html',
+  styleUrls: ['./categories.page.scss']
 })
-export class CategoriesPage implements OnInit {
+export class CategoriesPage {
   categories: Category[] = [];
-  categories$!: Observable<Category[]>;
+  selectedCategoryId?: string;
+
+  animateBadge: { [categoryId: string]: WritableSignal<boolean> } = {};
 
   constructor(
     private categoryService: CategoryService,
-    private alertCtrl: AlertController
-  ) { }
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController
+  ) {}
 
   ngOnInit() {
-    this.categories$ = this.categoryService.getCategories();
+    this.loadCategories();
+  }
 
-    this.categories$.subscribe(categories => {
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
   }
@@ -42,20 +47,15 @@ export class CategoriesPage implements OnInit {
             const name = data.name?.trim();
             if (!name) return;
 
-            const exists = this.categories.some(
-              c => c.name.toLowerCase() === name.toLowerCase()
-            );
+            const exists = this.categories.some(c => c.name.toLowerCase() === name.toLowerCase());
             if (exists) {
-              const errorAlert = await this.alertCtrl.create({
-                header: 'Error',
-                message: 'La categoría ya existe.',
-                buttons: ['Aceptar'],
-              });
-              await errorAlert.present();
+              this.showToast('La categoría ya existe', 'danger');
               return;
             }
 
             await this.categoryService.addCategory({ name });
+            this.loadCategories();
+            this.showToast('¡Categoría creada con éxito!', 'success');
           },
         },
       ],
@@ -79,16 +79,13 @@ export class CategoriesPage implements OnInit {
               c => c.name.toLowerCase() === name.toLowerCase() && c.id !== category.id
             );
             if (exists) {
-              const errorAlert = await this.alertCtrl.create({
-                header: 'Error',
-                message: 'Ya existe otra categoría con ese nombre.',
-                buttons: ['Aceptar'],
-              });
-              await errorAlert.present();
+              this.showToast('Ya existe otra categoría con ese nombre', 'danger');
               return;
             }
 
             await this.categoryService.updateCategory({ ...category, name });
+            this.loadCategories();
+            this.showToast('¡Categoría actualizada con éxito!', 'success');
           },
         },
       ],
@@ -106,10 +103,26 @@ export class CategoriesPage implements OnInit {
           text: 'Eliminar',
           handler: async () => {
             await this.categoryService.deleteCategory(category.id);
+            this.loadCategories();
+            this.showToast('¡Categoría eliminada con éxito!', 'success');
           },
+          cssClass: 'alert-danger'
         },
       ],
     });
     await alert.present();
+  }
+
+  private async showToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message,
+      color,
+      duration: 1500,
+      position: 'top',
+      icon: color === 'success' ? 'checkmark-circle' : 'alert-circle',
+      animated: true,
+      cssClass: 'fancy-toast'
+    });
+    await toast.present();
   }
 }

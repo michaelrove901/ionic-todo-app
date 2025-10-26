@@ -1,0 +1,17 @@
+<ion-toolbar color="primary" class="navbar-toolbar">
+  <ion-title class="ion-text-left navbar-title">Gestor de Tareas</ion-title>
+  <ion-buttons slot="end" class="navbar-buttons">
+    <ion-button [routerLink]="['/home']">
+      <ion-icon slot="start" [icon]="homeOutline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-button>
+    <ion-button [routerLink]="['/tasks']">
+      <ion-icon slot="start" [icon]="listOutline"></ion-icon>
+      <ion-label>Tareas</ion-label>
+    </ion-button>
+    <ion-button [routerLink]="['/categories']">
+      <ion-icon slot="start" [icon]="layersOutline"></ion-icon>
+      <ion-label>Categorías</ion-label>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>

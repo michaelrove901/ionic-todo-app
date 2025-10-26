@@ -1,4 +1,8 @@
 <ion-header>
+  <app-navbar></app-navbar>
+</ion-header>
+
+<ion-header>
   <ion-toolbar>
     <ion-title>Tareas</ion-title>
     <ion-buttons slot="end">
@@ -8,8 +12,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <!-- Filtrado por categoría -->
-  <ion-item>
+  <ion-item lines="full" class="filter-item">
     <ion-label>Filtrar por categoría</ion-label>
     <ion-select [(ngModel)]="selectedCategoryId" (ionChange)="filterByCategory(selectedCategoryId)">
       <ion-select-option value="">Todas</ion-select-option>
@@ -19,25 +22,26 @@
     </ion-select>
   </ion-item>
 
-  <!-- Lista de tareas -->
-  <ion-list>
-    <ion-item *ngFor="let task of filteredTasks">
-      <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="toggleCompleted(task)"></ion-checkbox>
-      <ion-label [class.completed]="task.completed">
-        <h2>{{ task.title }}</h2>
-        <p *ngIf="task.categoryId">{{ getCategoryName(task) }}</p>
-      </ion-label>
-      <ion-buttons slot="end">
-        <ion-button (click)="openEditModal(task)">Editar</ion-button>
-        <ion-button color="danger" (click)="confirmDelete(task)">Eliminar</ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-list>
-</ion-content>
+  <div class="tasks-grid">
+    <ion-card *ngFor="let task of filteredTasks" class="task-card">
+      <ion-item lines="none" class="task-item">
+        <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="toggleCompleted(task)"></ion-checkbox>
 
-<style>
-.completed {
-  text-decoration: line-through;
-  color: gray;
-}
-</style>
+        <ion-label [class.completed]="task.completed">
+          <h2>{{ task.title }}</h2>
+          <p *ngIf="task.categoryId">{{ getCategoryName(task) }}</p>
+        </ion-label>
+
+        <ion-badge *ngIf="animateBadge[task.id]?.()" class="completion-badge"
+          [color]="task.completed ? 'success' : 'medium'">
+          {{ task.completed ? 'Completada 🎉' : 'Incompleta ⚠️' }}
+        </ion-badge>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="openEditModal(task)">Editar</ion-button>
+          <ion-button color="danger" (click)="confirmDelete(task)">Eliminar</ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-card>
+  </div>
+</ion-content>

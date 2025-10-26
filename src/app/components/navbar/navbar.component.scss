@@ -1,0 +1,28 @@
+.navbar-toolbar {
+  --min-height: 70px;
+}
+
+.navbar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-buttons ion-button {
+  font-size: 1rem;
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+@media (max-width: 600px) {
+  .navbar-title {
+    font-size: 1.2rem;
+  }
+  .navbar-buttons ion-button {
+    font-size: 0.9rem;
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+  .navbar-buttons ion-label {
+    display: none;
+  }
+}

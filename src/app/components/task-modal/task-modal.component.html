@@ -1,27 +1,40 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>{{ task ? 'Editar Tarea' : 'Nueva Tarea' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">Cerrar</ion-button>
+      <ion-button (click)="close()">✖</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label>Título</ion-label>
-    <ion-input [(ngModel)]="taskTitle"></ion-input>
-  </ion-item>
+<ion-content class="modal-content">
+  <div class="modal-wrapper">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          {{ task ? 'Editar tu tarea' : 'Crea tu tarea' }}
+        </ion-card-title>
+        <ion-card-subtitle>
+          Mantén tus tareas organizadas y al día
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Título de la tarea</ion-label>
+          <ion-input [(ngModel)]="taskTitle" placeholder="Escribe el título"></ion-input>
+        </ion-item>
 
-  <ion-item>
-    <ion-label>Categoría</ion-label>
-    <ion-select [(ngModel)]="selectedCategoryId">
-      <ion-select-option *ngFor="let c of categories" [value]="c.id.toString()">{{ c.name }}</ion-select-option>
-    </ion-select>
+        <ion-item>
+          <ion-label position="stacked">Selecciona categoría</ion-label>
+          <ion-select [(ngModel)]="selectedCategoryId" placeholder="Categoría">
+            <ion-select-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
 
-  </ion-item>
-
-  <ion-button expand="full" (click)="saveTask()">
-    {{ task ? 'Actualizar' : 'Crear' }}
-  </ion-button>
+        <ion-button expand="full" color="success" (click)="saveTask()">
+          {{ task ? 'Actualizar Tarea' : 'Crear Tarea' }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

@@ -1,0 +1,56 @@
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.task-item {
+  position: relative;
+}
+
+.completion-badge {
+  position: absolute;
+  top: 8px;
+  right: 90px;
+  font-size: 1rem;
+  opacity: 0;
+  transform: scale(0);
+  animation: popFade 1.2s forwards;
+}
+
+@keyframes popFade {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.filter-item {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background: #f2f2f2;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.task-card {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .tasks-grid {
+    grid-template-columns: 1fr;
+  }
+}
